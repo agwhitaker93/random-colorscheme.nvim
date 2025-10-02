@@ -9,7 +9,7 @@
     (_G.vim.cmd (.. "colorscheme " colourscheme)))
   (math.randomseed (os.time)))
 
-(let [config (require :colourscheme.config)
+(let [config (require :random-colorscheme.config)
       finders (require :telescope.finders)
       telescope-config (require :telescope.config)]
   {:setup (fn [opts]
