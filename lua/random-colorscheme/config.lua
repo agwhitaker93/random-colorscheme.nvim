@@ -1,4 +1,4 @@
--- [nfnl] custom-plugins/colourscheme.nvim/lua/colourscheme/config.fnl
+-- [nfnl] lua/random-colorscheme/config.fnl
 local M = {initial = "random", colourschemes = {}, override_telescope_picker = false}
 local function _1_(opts)
   for key, value in pairs(opts) do

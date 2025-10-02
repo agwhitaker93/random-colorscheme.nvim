@@ -1,4 +1,4 @@
--- [nfnl] custom-plugins/colourscheme.nvim/lua/colourscheme/init.fnl
+-- [nfnl] lua/random-colorscheme/init.fnl
 local function pick_random(colourschemes)
   do
     local date = os.date("*t")
@@ -14,7 +14,7 @@ local function pick_random(colourschemes)
   end
   return math.randomseed(os.time())
 end
-local config = require("colourscheme.config")
+local config = require("random-colorscheme.config")
 local finders = require("telescope.finders")
 local telescope_config = require("telescope.config")
 local function _1_(opts)
