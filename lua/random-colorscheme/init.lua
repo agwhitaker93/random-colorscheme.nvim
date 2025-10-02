@@ -1,4 +1,5 @@
 -- [nfnl] lua/random-colorscheme/init.fnl
+local config = require("random-colorscheme.config")
 local function pick_random(colourschemes)
   do
     local date = os.date("*t")
@@ -14,28 +15,34 @@ local function pick_random(colourschemes)
   end
   return math.randomseed(os.time())
 end
-local config = require("random-colorscheme.config")
-local finders = require("telescope.finders")
-local telescope_config = require("telescope.config")
-local function _1_(opts)
-  local colourschemes = opts.colourschemes
-  config.setup(opts)
-  do
-    local _2_ = config.initial
-    if (_2_ == "random") then
-      pick_random(colourschemes)
-    elseif (_2_ == "environment") then
-      _G.vim.cmd(("colorscheme " .. os.getenv("COLOURSCHEME")))
-    else
-      local _ = _2_
-      _G.vim.cmd(("colorscheme " .. config.initial))
-    end
-  end
-  if config.override_telescope_picker then
-    telescope_config.pickers.colorscheme.finder = finders.new_table({results = config.colourschemes})
+local function override_telescope_picker()
+  local config_ok, telescope_config = pcall(require, "telescope.config")
+  local finders_ok, telescope_finders = pcall(require, "telescope.finders")
+  if (config_ok and finders_ok) then
+    telescope_config.pickers.colorscheme = _G.vim.tbl_deep_extend("error", (telescope_config.pickers.colorscheme or {}), {finder = telescope_finders.new_table({results = config.colourschemes})})
     return nil
   else
     return nil
   end
 end
-return {setup = _1_}
+local function _2_(opts)
+  local colourschemes = opts.colourschemes
+  config.setup(opts)
+  do
+    local _3_ = config.initial
+    if (_3_ == "random") then
+      pick_random(colourschemes)
+    elseif (_3_ == "environment") then
+      _G.vim.cmd(("colorscheme " .. os.getenv("COLOURSCHEME")))
+    else
+      local _ = _3_
+      _G.vim.cmd(("colorscheme " .. config.initial))
+    end
+  end
+  if config.override_telescope_picker then
+    return override_telescope_picker()
+  else
+    return nil
+  end
+end
+return {setup = _2_}

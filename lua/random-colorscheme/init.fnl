@@ -1,3 +1,5 @@
+(local config (require :random-colorscheme.config))
+
 (fn pick-random [colourschemes]
   (let [date (os.date :*t)
         year date.year
@@ -9,17 +11,22 @@
     (_G.vim.cmd (.. "colorscheme " colourscheme)))
   (math.randomseed (os.time)))
 
-(let [config (require :random-colorscheme.config)
-      finders (require :telescope.finders)
-      telescope-config (require :telescope.config)]
-  {:setup (fn [opts]
-            (let [colourschemes (. opts :colourschemes)]
-              (config.setup opts)
-              (case config.initial
-                :random (pick-random colourschemes)
-                :environment (_G.vim.cmd (.. "colorscheme "
-                                             (os.getenv :COLOURSCHEME)))
-                _ (_G.vim.cmd (.. "colorscheme " config.initial)))
-              (if config.override_telescope_picker ; TODO: check if telescope is even available
-                  (set telescope-config.pickers.colorscheme.finder
-                       (finders.new_table {:results config.colourschemes})))))})
+(fn override-telescope-picker []
+  (local (config-ok telescope-config) (pcall require :telescope.config))
+  (local (finders-ok telescope-finders) (pcall require :telescope.finders))
+  (if (and config-ok finders-ok)
+      (set telescope-config.pickers.colorscheme
+           (_G.vim.tbl_deep_extend :error
+                                   (or telescope-config.pickers.colorscheme {})
+                                   {:finder (telescope-finders.new_table {:results config.colourschemes})}))))
+
+{:setup (fn [opts]
+          (let [colourschemes (. opts :colourschemes)]
+            (config.setup opts)
+            (case config.initial
+              :random (pick-random colourschemes)
+              :environment (_G.vim.cmd (.. "colorscheme "
+                                           (os.getenv :COLOURSCHEME)))
+              _ (_G.vim.cmd (.. "colorscheme " config.initial)))
+            (if config.override_telescope_picker
+                (override-telescope-picker))))}
