@@ -1,5 +1,5 @@
 -- [nfnl] lua/random-colorscheme/config.fnl
-local M = {initial = "random", colorschemes = {}}
+local M = {initial = "random", colorschemes = {}, light = {}, dark = {}}
 local function _1_(opts)
   for key, value in pairs(opts) do
     M[key] = value
