@@ -15,34 +15,17 @@ local function pick_random(colorschemes)
   end
   return math.randomseed(os.time())
 end
-local function override_telescope_picker()
-  local config_ok, telescope_config = pcall(require, "telescope.config")
-  local finders_ok, telescope_finders = pcall(require, "telescope.finders")
-  if (config_ok and finders_ok) then
-    telescope_config.pickers.colorscheme = _G.vim.tbl_deep_extend("error", (telescope_config.pickers.colorscheme or {}), {finder = telescope_finders.new_table({results = config.colorschemes})})
-    return nil
-  else
-    return nil
-  end
-end
-local function _2_(opts)
+local function _1_(opts)
   local colorschemes = opts.colorschemes
   config.setup(opts)
-  do
-    local _3_ = config.initial
-    if (_3_ == "random") then
-      pick_random(colorschemes)
-    elseif (_3_ == "environment") then
-      _G.vim.cmd(("colorscheme " .. os.getenv("COLOURSCHEME")))
-    else
-      local _ = _3_
-      _G.vim.cmd(("colorscheme " .. config.initial))
-    end
-  end
-  if config.override_telescope_picker then
-    return override_telescope_picker()
+  local _2_ = config.initial
+  if (_2_ == "random") then
+    return pick_random(colorschemes)
+  elseif (_2_ == "environment") then
+    return _G.vim.cmd(("colorscheme " .. os.getenv("COLOURSCHEME")))
   else
-    return nil
+    local _ = _2_
+    return _G.vim.cmd(("colorscheme " .. config.initial))
   end
 end
-return {setup = _2_}
+return {setup = _1_}
