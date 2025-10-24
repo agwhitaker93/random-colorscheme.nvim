@@ -1,14 +1,14 @@
 (local config (require :random-colorscheme.config))
 
-(fn pick-random [colourschemes]
+(fn pick-random [colorschemes]
   (let [date (os.date :*t)
         year date.year
         month date.month
         day date.day]
     (math.randomseed (os.time {: year : month : day})))
-  (let [random (math.random (length colourschemes))
-        colourscheme (. colourschemes random)]
-    (_G.vim.cmd (.. "colorscheme " colourscheme)))
+  (let [random (math.random (length colorschemes))
+        colorscheme (. colorschemes random)]
+    (_G.vim.cmd (.. "colorscheme " colorscheme)))
   (math.randomseed (os.time)))
 
 (fn override-telescope-picker []
@@ -18,13 +18,13 @@
       (set telescope-config.pickers.colorscheme
            (_G.vim.tbl_deep_extend :error
                                    (or telescope-config.pickers.colorscheme {})
-                                   {:finder (telescope-finders.new_table {:results config.colourschemes})}))))
+                                   {:finder (telescope-finders.new_table {:results config.colorschemes})}))))
 
 {:setup (fn [opts]
-          (let [colourschemes (. opts :colourschemes)]
+          (let [colorschemes (. opts :colorschemes)]
             (config.setup opts)
             (case config.initial
-              :random (pick-random colourschemes)
+              :random (pick-random colorschemes)
               :environment (_G.vim.cmd (.. "colorscheme "
                                            (os.getenv :COLOURSCHEME)))
               _ (_G.vim.cmd (.. "colorscheme " config.initial)))

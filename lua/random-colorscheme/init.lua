@@ -1,6 +1,6 @@
 -- [nfnl] lua/random-colorscheme/init.fnl
 local config = require("random-colorscheme.config")
-local function pick_random(colourschemes)
+local function pick_random(colorschemes)
   do
     local date = os.date("*t")
     local year = date.year
@@ -9,9 +9,9 @@ local function pick_random(colourschemes)
     math.randomseed(os.time({year = year, month = month, day = day}))
   end
   do
-    local random = math.random(#colourschemes)
-    local colourscheme = colourschemes[random]
-    _G.vim.cmd(("colorscheme " .. colourscheme))
+    local random = math.random(#colorschemes)
+    local colorscheme = colorschemes[random]
+    _G.vim.cmd(("colorscheme " .. colorscheme))
   end
   return math.randomseed(os.time())
 end
@@ -19,19 +19,19 @@ local function override_telescope_picker()
   local config_ok, telescope_config = pcall(require, "telescope.config")
   local finders_ok, telescope_finders = pcall(require, "telescope.finders")
   if (config_ok and finders_ok) then
-    telescope_config.pickers.colorscheme = _G.vim.tbl_deep_extend("error", (telescope_config.pickers.colorscheme or {}), {finder = telescope_finders.new_table({results = config.colourschemes})})
+    telescope_config.pickers.colorscheme = _G.vim.tbl_deep_extend("error", (telescope_config.pickers.colorscheme or {}), {finder = telescope_finders.new_table({results = config.colorschemes})})
     return nil
   else
     return nil
   end
 end
 local function _2_(opts)
-  local colourschemes = opts.colourschemes
+  local colorschemes = opts.colorschemes
   config.setup(opts)
   do
     local _3_ = config.initial
     if (_3_ == "random") then
-      pick_random(colourschemes)
+      pick_random(colorschemes)
     elseif (_3_ == "environment") then
       _G.vim.cmd(("colorscheme " .. os.getenv("COLOURSCHEME")))
     else
