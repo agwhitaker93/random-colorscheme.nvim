@@ -45,8 +45,6 @@ return {
 
 If you provide arrays of light and dark colorschemes during setup, it will pick a random scheme from the relevant list based on `vim.o.background`
 
-If a colorscheme has both a light and dark mode, putting them at the same index in each array will switch between them when `vim.o.background` changes
-
 ### Example config
 
 ```lua
