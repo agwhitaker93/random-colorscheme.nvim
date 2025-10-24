@@ -9,8 +9,8 @@ local function pick_random(colorschemes)
     math.randomseed(os.time({year = year, month = month, day = day}))
   end
   do
-    local random = math.random(#colorschemes)
-    local colorscheme = colorschemes[random]
+    local random = math.random(10000)
+    local colorscheme = colorschemes[(random % #colorschemes)]
     _G.vim.cmd(("colorscheme " .. colorscheme))
   end
   return math.randomseed(os.time())

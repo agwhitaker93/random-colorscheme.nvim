@@ -6,8 +6,8 @@
         month date.month
         day date.day]
     (math.randomseed (os.time {: year : month : day})))
-  (let [random (math.random (length colorschemes))
-        colorscheme (. colorschemes random)]
+  (let [random (math.random 10000) ; NOTE: pick a really big number, we'll modulo it
+        colorscheme (. colorschemes (% random (length colorschemes)))]
     (_G.vim.cmd (.. "colorscheme " colorscheme)))
   (math.randomseed (os.time)))
 
