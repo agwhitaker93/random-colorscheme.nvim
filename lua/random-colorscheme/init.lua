@@ -17,7 +17,6 @@ local function pick_random(colorschemes)
 end
 local function setup_background_autocmd()
   local function _1_()
-    _G.vim.print("Detected background change, picking new scheme")
     local function _3_()
       local _2_ = _G.vim.o.background
       if (_2_ == "dark") then

@@ -17,7 +17,6 @@
                                                                           {:clear true})
                                    :pattern :background
                                    :callback (fn []
-                                               (_G.vim.print "Detected background change, picking new scheme")
                                                (pick-random (case _G.vim.o.background
                                                               :dark config.dark
                                                               :light config.light)))}))
