@@ -1,13 +1,24 @@
 (local config (require :random-colorscheme.config))
 
+(fn get-light-or-dark-scheme [scheme]
+  (if (and scheme.light scheme.dark)
+      (case config.background
+        :auto (case _G.vim.o.background
+                :dark scheme.dark
+                :light scheme.light)
+        :dark scheme.dark
+        :light scheme.light)
+      scheme))
+
 (fn pick-random [colorschemes]
   (let [date (os.date :*t)
         year date.year
         month date.month
         day date.day]
     (math.randomseed (os.time {: year : month : day})))
-  (let [random (math.random 10000) ; NOTE: pick a really big number, we'll modulo it
-        colorscheme (. colorschemes (% random (length colorschemes)))]
+  (let [random (math.random (length colorschemes))
+        colorscheme (. colorschemes random)
+        colorscheme (get-light-or-dark-scheme colorscheme)]
     (_G.vim.cmd (.. "colorscheme " colorscheme)))
   (math.randomseed (os.time)))
 
@@ -17,21 +28,14 @@
                                                                           {:clear true})
                                    :pattern :background
                                    :callback (fn []
-                                               (pick-random (case _G.vim.o.background
-                                                              :dark config.dark
-                                                              :light config.light)))}))
+                                               (pick-random config.colorschemes))}))
 
 {:setup (fn [opts]
-          (let [colorschemes (. opts :colorschemes)
-                light (. opts :light)
-                dark (. opts :dark)]
-            (config.setup opts)
-            (case config.initial
-              :random (if (and light dark)
-                          nil ; NOTE: vim.o.background hasn't been set yet, so do nothing and let the autocmd handle it
-                          (pick-random colorschemes))
-              :environment (_G.vim.cmd (.. "colorscheme "
-                                           (os.getenv :COLORSCHEME)))
-              _ (_G.vim.cmd (.. "colorscheme " config.initial)))
-            (if (and light dark)
-                (setup-background-autocmd))))}
+          (config.setup opts)
+          (case config.initial
+            :random (if (= config.background :auto)
+                        (setup-background-autocmd)
+                        (pick-random config.colorschemes))
+            :environment (_G.vim.cmd (.. "colorscheme "
+                                         (os.getenv :COLORSCHEME)))
+            _ (_G.vim.cmd (.. "colorscheme " config.initial))))}

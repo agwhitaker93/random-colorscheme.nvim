@@ -10,15 +10,14 @@ return {
   priority = 2000,
   lazy = false,
   dependencies = {
-    "nvim-telescope/telescope.nvim",
     {
       "miikanissi/modus-themes.nvim",
       opts = function()
         return {
-          on_highlights = function(highlights, colours)
-            highlights.CursorLine = { fg = colours.none, bg = colours.bg_dim }
-            highlights.CursorLineNr = { fg = colours.cyan_intense, bg = colours.bg_dim, bold = true }
-            highlights.LineNr = { fg = colours.fg_dim, bg = colours.bg_main }
+          on_highlights = function(highlights, colors)
+            highlights.CursorLine = { fg = colors.none, bg = colors.bg_dim }
+            highlights.CursorLineNr = { fg = colors.cyan_intense, bg = colors.bg_dim, bold = true }
+            highlights.LineNr = { fg = colors.fg_dim, bg = colors.bg_main }
           end,
         }
       end,
@@ -29,7 +28,7 @@ return {
   },
   opts = {
     initial = "random", -- Can be set to a colorscheme to always pick the same one
-    colourschemes = {
+    colorschemes = {
       "citruszest",
       "modus",
       "nvimgelion",
@@ -43,47 +42,17 @@ return {
 
 ## Light and dark colorschemes
 
-If you provide arrays of light and dark colorschemes during setup, it will pick a random scheme from the relevant list based on `vim.o.background`
-
-### Example config
+You can optionally provide a map of light/dark theme pairs.
+Not necessary for colorschemes that support both dark and light modes, like modus, oxocarbon, etc.
 
 ```lua
-return {
-  "agwhitaker93/random-colorscheme.nvim",
-  priority = 2000,
-  lazy = false,
-  dependencies = {
-    "nvim-telescope/telescope.nvim",
-    {
-      "miikanissi/modus-themes.nvim",
-      opts = function()
-        return {
-          on_highlights = function(highlights, colours)
-            highlights.CursorLine = { fg = colours.none, bg = colours.bg_dim }
-            highlights.CursorLineNr = { fg = colours.cyan_intense, bg = colours.bg_dim, bold = true }
-            highlights.LineNr = { fg = colours.fg_dim, bg = colours.bg_main }
-          end,
-        }
-      end,
-      lazy = false,
-    },
-    "zootedb0t/citruszest.nvim",
-    "nyngwang/nvimgelion",
-  },
+{
   opts = {
-    initial = "random",
-    light = {
-      "delek",
-      "modus_operandi",
-    },
-    dark = {
-      "citruszest",
-      "modus_vivendi",
-      "nvimgelion",
-      "sorbet",
-      "torte",
-      "wildcharm",
-    },
+    colorschemes = {
+      "modus",
+      { light = "cyberdream-light", dark = "cyberdream" },
+      { light = "my light theme", dark = "my unrelated dark theme" }
+    }
   },
 }
 ```
