@@ -24,12 +24,13 @@ local function get_light_or_dark_scheme(scheme)
   end
 end
 local function pick_random(colorschemes)
-  do
+  if not config.party then
     local date = os.date("*t")
     local year = date.year
     local month = date.month
     local day = date.day
     math.randomseed(os.time({year = year, month = month, day = day}))
+  else
   end
   do
     local random = math.random(#colorschemes)
@@ -39,26 +40,46 @@ local function pick_random(colorschemes)
   end
   return math.randomseed(os.time())
 end
-local function setup_background_autocmd()
-  local function _6_()
-    return pick_random(config.colorschemes)
+local function schedule_colorscheme_change(config0)
+  if config0["automatic-colorscheme-change"] then
+    local function _7_()
+      pick_random(config0.colorschemes)
+      return schedule_colorscheme_change(config0)
+    end
+    local function _8_()
+      if config0.party then
+        return 1000
+      else
+        return 60000
+      end
+    end
+    return _G.vim.defer_fn(_7_, _8_())
+  else
+    return nil
   end
-  return _G.vim.api.nvim_create_autocmd("OptionSet", {group = _G.vim.api.nvim_create_augroup("RandomColourschemeBackgroundChange", {clear = true}), pattern = "background", callback = _6_})
 end
-local function _7_(opts)
+local function setup_background_autocmd()
+  local function _10_()
+    pick_random(config.colorschemes)
+    return schedule_colorscheme_change(config)
+  end
+  return _G.vim.api.nvim_create_autocmd("OptionSet", {group = _G.vim.api.nvim_create_augroup("RandomColourschemeBackgroundChange", {clear = true}), pattern = "background", callback = _10_})
+end
+local function _11_(opts)
   config.setup(opts)
-  local case_8_ = config.initial
-  if (case_8_ == "random") then
+  local case_12_ = config.initial
+  if (case_12_ == "random") then
     if (config.background == "auto") then
       return setup_background_autocmd()
     else
-      return pick_random(config.colorschemes)
+      pick_random(config.colorschemes)
+      return schedule_colorscheme_change(config)
     end
-  elseif (case_8_ == "environment") then
+  elseif (case_12_ == "environment") then
     return _G.vim.cmd(("colorscheme " .. os.getenv("COLORSCHEME")))
   else
-    local _ = case_8_
+    local _ = case_12_
     return _G.vim.cmd(("colorscheme " .. config.initial))
   end
 end
-return {setup = _7_}
+return {setup = _11_}
