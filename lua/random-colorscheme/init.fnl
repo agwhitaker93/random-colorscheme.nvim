@@ -42,11 +42,11 @@
 {:setup (fn [opts]
           (config.setup opts)
           (case config.initial
-            :random (if (= config.background :auto)
-                        (setup-background-autocmd)
-                        (do
-                          (pick-random config.colorschemes)
-                          (schedule-colorscheme-change config)))
+            :random (do
+                      (pick-random config.colorschemes)
+                      (schedule-colorscheme-change config)
+                      (if (= config.background :auto)
+                          (setup-background-autocmd)))
             :environment (_G.vim.cmd (.. "colorscheme "
                                          (os.getenv :COLORSCHEME)))
             _ (_G.vim.cmd (.. "colorscheme " config.initial))))}

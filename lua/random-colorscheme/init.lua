@@ -69,11 +69,12 @@ local function _11_(opts)
   config.setup(opts)
   local case_12_ = config.initial
   if (case_12_ == "random") then
+    pick_random(config.colorschemes)
+    schedule_colorscheme_change(config)
     if (config.background == "auto") then
       return setup_background_autocmd()
     else
-      pick_random(config.colorschemes)
-      return schedule_colorscheme_change(config)
+      return nil
     end
   elseif (case_12_ == "environment") then
     return _G.vim.cmd(("colorscheme " .. os.getenv("COLORSCHEME")))
